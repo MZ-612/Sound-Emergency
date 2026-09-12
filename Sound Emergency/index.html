@@ -1,0 +1,1459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Emergency Mission</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+    }
+
+    body {
+        background: #0b1220;
+        color: white;
+        min-height: 100vh;
+    }
+
+    .app {
+        max-width: 430px;
+        margin: auto;
+        min-height: 100vh;
+        background: #111827;
+    }
+
+    header {
+        padding: 22px;
+        background: #172033;
+        text-align: center;
+        border-bottom: 1px solid #293449;
+    }
+
+    header h1 {
+        font-size: 26px;
+    }
+
+    header p {
+        color: #aab4c5;
+        margin-top: 6px;
+        font-size: 14px;
+    }
+
+    .screen {
+        display: none;
+        padding: 20px;
+    }
+
+    .screen.active {
+        display: block;
+    }
+
+    .welcome {
+        text-align: center;
+        padding: 30px 10px;
+    }
+
+    .logo {
+        font-size: 65px;
+        margin-bottom: 15px;
+    }
+
+    h2 {
+        margin-bottom: 10px;
+    }
+
+    .description {
+        color: #aab4c5;
+        line-height: 1.5;
+        margin-bottom: 25px;
+    }
+
+    .hero-badge {
+        display: inline-block;
+        background: rgba(37, 99, 235, 0.14);
+        color: #93c5fd;
+        border: 1px solid rgba(96, 165, 250, 0.35);
+        padding: 8px 12px;
+        border-radius: 999px;
+        font-size: 12px;
+        margin-bottom: 14px;
+        letter-spacing: 0.04em;
+    }
+
+    .quick-actions {
+        display: grid;
+        gap: 10px;
+        margin-top: 18px;
+    }
+
+    .mini-card {
+        background: #1b2638;
+        border: 1px solid #293449;
+        border-radius: 14px;
+        padding: 16px;
+        margin: 12px 0;
+    }
+
+    .mini-card h3 {
+        margin-bottom: 10px;
+        font-size: 18px;
+    }
+
+    .mini-card ul {
+        list-style: none;
+        color: #dbe5f1;
+        line-height: 1.8;
+        font-size: 14px;
+    }
+
+    .mini-card li::before {
+        content: "• ";
+        color: #60a5fa;
+    }
+
+    .emergency-cta {
+        background: linear-gradient(135deg, #dc2626, #991b1b);
+        box-shadow: 0 12px 25px rgba(220, 38, 38, 0.25);
+    }
+
+    .emergency-cta:hover {
+        background: linear-gradient(135deg, #ef4444, #b91c1c);
+    }
+
+    .list-box {
+        background: #0f172a;
+        border: 1px solid #293449;
+        border-radius: 12px;
+        padding: 12px;
+        margin-top: 12px;
+    }
+
+    .list-box small {
+        display: block;
+        color: #93c5fd;
+        margin-bottom: 8px;
+        font-weight: bold;
+    }
+
+    .list-box p {
+        color: #dfe7f6;
+        line-height: 1.6;
+    }
+
+    button {
+        width: 100%;
+        padding: 15px;
+        margin: 7px 0;
+        border: none;
+        border-radius: 12px;
+        background: #2563eb;
+        color: white;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.2s ease;
+    }
+
+    button:hover {
+        background: #1d4ed8;
+    }
+
+    .secondary {
+        background: #293449;
+    }
+
+    .danger {
+        background: #dc2626;
+    }
+
+    .success {
+        background: #16a34a;
+    }
+
+    .card {
+        background: #1b2638;
+        padding: 18px;
+        border-radius: 15px;
+        margin: 12px 0;
+        border: 1px solid #293449;
+    }
+
+    .card h3 {
+        margin-bottom: 8px;
+    }
+
+    .card p {
+        color: #b7c0cf;
+        line-height: 1.5;
+    }
+
+    .xp {
+        background: #293449;
+        padding: 12px;
+        border-radius: 10px;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .question {
+        font-size: 19px;
+        line-height: 1.5;
+        margin: 20px 0;
+    }
+
+    .answer {
+        background: #293449;
+    }
+
+    .answer:hover {
+        background: #37455c;
+    }
+
+    .result {
+        padding: 20px;
+        border-radius: 12px;
+        margin-top: 15px;
+        display: none;
+        line-height: 1.5;
+    }
+
+    .correct {
+        background: #14532d;
+        border: 1px solid #22c55e;
+    }
+
+    .wrong {
+        background: #7f1d1d;
+        border: 1px solid #ef4444;
+    }
+
+    .points {
+        font-size: 28px;
+        font-weight: bold;
+        text-align: center;
+        margin: 15px;
+    }
+
+    .status {
+        text-align: center;
+        padding: 15px;
+        background: #293449;
+        border-radius: 12px;
+        margin: 15px 0;
+    }
+
+    .warning {
+        background: #422006;
+        border: 1px solid #f59e0b;
+        padding: 15px;
+        border-radius: 12px;
+        margin-top: 15px;
+        color: #fde68a;
+        line-height: 1.5;
+    }
+
+    .camera-box {
+        height: 220px;
+        background: #05080f;
+        border: 2px dashed #64748b;
+        border-radius: 15px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        color: #94a3b8;
+        margin: 15px 0;
+    }
+
+    .chat-panel {
+        background: #0f172a;
+        border: 1px solid #293449;
+        border-radius: 14px;
+        padding: 14px;
+        margin-top: 12px;
+    }
+
+    .chat-box {
+        background: #111827;
+        border: 1px solid #293449;
+        border-radius: 12px;
+        padding: 12px;
+        max-height: 240px;
+        overflow-y: auto;
+        margin-bottom: 12px;
+    }
+
+    .message {
+        padding: 10px 12px;
+        border-radius: 10px;
+        margin: 8px 0;
+        line-height: 1.5;
+        font-size: 14px;
+    }
+
+    .message.user {
+        background: #1d4ed8;
+        margin-left: 20px;
+    }
+
+    .message.ai {
+        background: #293449;
+        margin-right: 20px;
+    }
+
+    textarea {
+        width: 100%;
+        min-height: 110px;
+        padding: 14px;
+        border-radius: 10px;
+        border: none;
+        margin: 8px 0;
+        background: #293449;
+        color: white;
+        font-size: 15px;
+        resize: vertical;
+    }
+
+    input {
+        width: 100%;
+        padding: 14px;
+        border-radius: 10px;
+        border: none;
+        margin: 8px 0;
+        background: #293449;
+        color: white;
+        font-size: 15px;
+    }
+
+    .bottom {
+        padding: 20px;
+        border-top: 1px solid #293449;
+        text-align: center;
+        color: #64748b;
+        font-size: 12px;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<header>
+    <h1> Sound Emergency </h1>
+    <p>Learn • React • Stay Safe</p>
+</header>
+
+<!-- HOME -->
+<div id="home" class="screen active">
+
+    <div class="welcome">
+
+        <div class="logo">🛡️</div>
+
+        <div class="hero-badge">READY FOR EMERGENCIES</div>
+
+        <h2>Welcome!</h2>
+
+        <p class="description">
+            Learn how to react safely to different emergency situations
+            through simple interactive missions.
+        </p>
+
+        <button class="emergency-cta" onclick="showScreen('help')">
+            🚨 Emergency Help
+        </button>
+
+        <button onclick="showScreen('game')">
+            🎮 Start Emergency Game
+        </button>
+
+        <button class="secondary" onclick="showScreen('checklist')">
+            ✅ Safety Checklist
+        </button>
+
+        <button class="secondary" onclick="showScreen('safety')">
+            🛡️ Safety Mode
+        </button>
+
+        <button class="secondary" onclick="showScreen('ai')">
+            🤖 Talk to AI
+        </button>
+
+        <button class="secondary" onclick="showScreen('sounds')">
+            🔊 Emergency Sounds
+        </button>
+
+        <button class="secondary" onclick="showScreen('camera')">
+            📷 AI Camera Demo
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- GAME -->
+<div id="game" class="screen">
+
+    <div class="xp">
+        ⭐ XP: <span id="xp">0</span>
+    </div>
+
+    <h2>🎮 Emergency Missions</h2>
+
+    <div class="card">
+        <h3>🔥 Level 1 — Fire Alarm</h3>
+        <p>Learn what to do when you hear a fire alarm.</p>
+        <button onclick="startFire()">Start Level</button>
+    </div>
+
+    <div class="card">
+        <h3>🚗 Level 2 — Road Emergency</h3>
+        <p>Choose the safest response to a road emergency.</p>
+        <button onclick="startRoad()">Start Level</button>
+    </div>
+
+    <div class="card">
+        <h3>🌧️ Level 3 — Severe Weather</h3>
+        <p>Test your decision-making during dangerous weather.</p>
+        <button onclick="startWeather()">Start Level</button>
+    </div>
+
+    <button class="secondary" onclick="showScreen('home')">
+        ← Back
+    </button>
+
+</div>
+
+
+<!-- EMERGENCY HELP -->
+<div id="help" class="screen">
+
+    <h2>🚨 Emergency Help</h2>
+
+    <div class="mini-card">
+        <h3>Quick urgent actions</h3>
+        <ul>
+            <li>Move away from danger</li>
+            <li>Call local emergency services</li>
+            <li>Share your location with a trusted person</li>
+            <li>Stay calm and follow instructions</li>
+        </ul>
+    </div>
+
+    <div class="quick-actions">
+        <button class="emergency-cta" onclick="triggerEmergencyAlert()">
+            🚑 Trigger Help Alert
+        </button>
+        <button onclick="shareLocation()">
+            📍 Share Demo Location
+        </button>
+        <button onclick="sendMessage()">
+            💬 Send Emergency Message
+        </button>
+        <button class="secondary" onclick="showScreen('checklist')">
+            ✅ Open Safety Checklist
+        </button>
+    </div>
+
+    <button class="secondary" onclick="showScreen('home')">
+        ← Back
+    </button>
+
+</div>
+
+
+<!-- QUESTION -->
+<div id="questionScreen" class="screen">
+
+    <h2 id="levelTitle">Sound Emergency</h2>
+
+    <div class="question" id="question">
+        Question goes here.
+    </div>
+
+    <button class="answer" id="answer1" onclick="answer(0)">
+        Answer 1
+    </button>
+
+    <button class="answer" id="answer2" onclick="answer(1)">
+        Answer 2
+    </button>
+
+    <button class="answer" id="answer3" onclick="answer(2)">
+        Answer 3
+    </button>
+
+    <div id="result" class="result"></div>
+
+    <button id="nextButton" class="success"
+            style="display:none;"
+            onclick="showScreen('game')">
+        Continue
+    </button>
+
+</div>
+
+
+<!-- CHECKLIST -->
+<div id="checklist" class="screen">
+
+    <h2>✅ Safety Checklist</h2>
+
+    <div class="mini-card">
+        <h3>Fire emergency</h3>
+        <ul>
+            <li>Stop, drop, and evacuate</li>
+            <li>Do not use elevators</li>
+            <li>Move to a safe assembly point</li>
+        </ul>
+    </div>
+
+    <div class="mini-card">
+        <h3>Medical emergency</h3>
+        <ul>
+            <li>Call for help immediately</li>
+            <li>Keep the person calm</li>
+            <li>Follow first aid guidance</li>
+        </ul>
+    </div>
+
+    <div class="mini-card">
+        <h3>Severe weather</h3>
+        <ul>
+            <li>Move to shelter</li>
+            <li>Avoid flooded roads</li>
+            <li>Listen for official updates</li>
+        </ul>
+    </div>
+
+    <div class="mini-card">
+        <h3>Road emergency</h3>
+        <ul>
+            <li>Stay away from danger</li>
+            <li>Call emergency services</li>
+            <li>Use warning lights if safe</li>
+        </ul>
+    </div>
+
+    <button class="secondary" onclick="showScreen('home')">
+        ← Back
+    </button>
+
+</div>
+
+
+<!-- SAFETY -->
+<div id="safety" class="screen">
+
+    <h2>🛡️ Safety Mode</h2>
+
+    <div class="status">
+        <h3 id="safetyStatus">Safety Mode OFF</h3>
+    </div>
+
+    <button onclick="toggleSafety()">
+        Turn Safety Mode ON/OFF
+    </button>
+
+    <div class="card">
+        <h3>📍 Location Sharing</h3>
+        <p>
+            Demo feature for sharing your location with a trusted contact.
+        </p>
+        <button onclick="shareLocation()">Share Demo Location</button>
+    </div>
+
+    <div class="card">
+        <h3>👤 Trusted Contact</h3>
+
+        <input
+            id="contact"
+            type="text"
+            placeholder="Enter trusted contact name">
+
+        <input
+            id="phone"
+            type="tel"
+            placeholder="Enter trusted contact phone number">
+
+        <button onclick="saveContact()">
+            Save Contact
+        </button>
+
+        <div class="list-box">
+            <small>Saved contact</small>
+            <p id="contactStatus">No contact saved yet.</p>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>💬 Emergency Message</h3>
+
+        <input
+            id="message"
+            type="text"
+            value="I may need help. Please check on me.">
+
+        <button onclick="sendMessage()">
+            Send Demo Message
+        </button>
+    </div>
+
+    <button class="secondary" onclick="showScreen('home')">
+        ← Back
+    </button>
+
+</div>
+
+
+<!-- SOUNDS -->
+<div id="sounds" class="screen">
+
+    <h2>🔊 Emergency Sound Library</h2>
+
+    <div class="card">
+        <h3>🚨 Siren</h3>
+        <p>Emergency vehicle sound</p>
+        <button onclick="playSound('siren')">
+            ▶ Play Demo
+        </button>
+    </div>
+
+    <div class="card">
+        <h3>� Police Siren</h3>
+        <p>High-priority response alert</p>
+        <button onclick="playSound('police')">
+            ▶ Play Demo
+        </button>
+    </div>
+
+    <div class="card">
+        <h3>🔥 Fire Alarm</h3>
+        <p>Fire alarm detection example</p>
+        <button onclick="playSound('alarm')">
+            ▶ Play Demo
+        </button>
+    </div>
+
+    <div class="card">
+        <h3>🚑 Medical Alert</h3>
+        <p>Urgent medical emergency tone</p>
+        <button onclick="playSound('medical')">
+            ▶ Play Demo
+        </button>
+    </div>
+
+    <div class="card">
+        <h3>📣 Evacuation Tone</h3>
+        <p>Building evacuation guidance sound</p>
+        <button onclick="playSound('evacuation')">
+            ▶ Play Demo
+        </button>
+    </div>
+
+    <div class="card">
+        <h3>💥 Impact Sound</h3>
+        <p>Accident/impact detection example</p>
+        <button onclick="playSound('impact')">
+            ▶ Play Demo
+        </button>
+    </div>
+
+    <div class="card">
+        <h3>🎙️ Add Your Own Sound</h3>
+
+        <input id="soundUpload" type="file" accept="audio/*">
+
+        <button onclick="playUploadedSound()">
+            ▶ Play Uploaded Sound
+        </button>
+
+        <p id="soundStatus">
+            Upload a sound clip to play it here.
+        </p>
+    </div>
+
+    <button class="secondary" onclick="showScreen('home')">
+        ← Back
+    </button>
+
+</div>
+
+
+<!-- AI ASSISTANT -->
+<div id="ai" class="screen">
+
+    <h2>🤖 AI Emergency Assistant</h2>
+
+    <p class="description">
+        Describe what is happening. The AI can suggest the safest next step
+        based on your situation.
+    </p>
+
+    <div class="chat-panel">
+        <div class="chat-box" id="aiChatBox">
+            <div class="message ai">
+                AI: Tell me what happened and where you are. I can help suggest the safest next step.
+            </div>
+        </div>
+
+        <textarea id="aiInput" placeholder="Example: There is smoke in the hallway and I am on the 3rd floor."></textarea>
+
+        <button onclick="askAi()">
+            Ask AI for Help
+        </button>
+
+        <button class="secondary" onclick="showScreen('home')">
+            ← Back
+        </button>
+    </div>
+
+</div>
+
+
+<!-- CAMERA -->
+<div id="camera" class="screen">
+
+    <h2>📷 AI Camera Detection</h2>
+
+    <p class="description">
+        This is a simulation of how AI camera detection could work.
+    </p>
+
+    <div class="camera-box" id="cameraBox">
+        📷<br><br>
+        Camera Preview
+    </div>
+
+    <button onclick="startCameraDemo()">
+        🔍 Scan for Possible Emergency
+    </button>
+
+    <div id="cameraResult" class="result"></div>
+
+    <div class="warning">
+        ⚠️ Demo only. Real AI detection can make mistakes.
+        A real version should ask the user to confirm before sending
+        alerts or contacting anyone.
+    </div>
+
+    <button class="secondary" onclick="showScreen('home')">
+        ← Back
+    </button>
+
+</div>
+
+
+<!-- BOTTOM -->
+<div class="bottom">
+    Emergency Mission Demo • Prototype Version
+</div>
+
+</div>
+
+
+<script>
+
+let xp = 0;
+
+let currentCorrect = 0;
+
+
+// Real voice announcements
+function speakAlert(message) {
+
+    if (!('speechSynthesis' in window)) {
+        return;
+    }
+
+    const voices = window.speechSynthesis.getVoices();
+    const utterance = new SpeechSynthesisUtterance(message);
+    utterance.lang = 'en-US';
+    utterance.rate = 1;
+    utterance.pitch = 1;
+    utterance.volume = 1;
+
+    const preferredVoice = voices.find(function(voice) {
+        return voice.lang && voice.lang.toLowerCase().startsWith('en');
+    });
+
+    if (preferredVoice) {
+        utterance.voice = preferredVoice;
+    }
+
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(utterance);
+}
+
+// Change screen
+function showScreen(screen) {
+
+    document.querySelectorAll(".screen").forEach(function(s) {
+        s.classList.remove("active");
+    });
+
+    document.getElementById(screen).classList.add("active");
+
+    const screenNames = {
+        home: 'Home screen',
+        game: 'Emergency game',
+        help: 'Emergency help',
+        questionScreen: 'Question screen',
+        checklist: 'Safety checklist',
+        safety: 'Safety mode',
+        sounds: 'Emergency sound library',
+        camera: 'AI camera demo'
+    };
+
+    if (screenNames[screen]) {
+        speakAlert(screenNames[screen]);
+    }
+
+    window.scrollTo(0, 0);
+}
+
+
+// Add XP
+function addXP(amount) {
+
+    xp += amount;
+
+    document.getElementById("xp").textContent = xp;
+}
+
+
+// Fire level
+function startFire() {
+
+    document.getElementById("levelTitle").textContent =
+        "🔥 Level 1 — Fire Alarm";
+
+    document.getElementById("question").textContent =
+        "You hear a fire alarm in a building. What is the safest choice?";
+
+    document.getElementById("answer1").textContent =
+        "Ignore it and continue what I am doing";
+
+    document.getElementById("answer2").textContent =
+        "Follow the building's evacuation instructions and move to a safe place";
+
+    document.getElementById("answer3").textContent =
+        "Go back inside to collect my things";
+
+    currentCorrect = 1;
+
+    resetQuestion();
+    speakAlert('Level one fire alarm. Follow evacuation instructions and move to a safe place.');
+    showScreen("questionScreen");
+}
+
+
+// Road level
+function startRoad() {
+
+    document.getElementById("levelTitle").textContent =
+        "🚗 Level 2 — Road Emergency";
+
+    document.getElementById("question").textContent =
+        "You notice a road emergency. What should you do first?";
+
+    document.getElementById("answer1").textContent =
+        "Put myself in danger to get closer";
+
+    document.getElementById("answer2").textContent =
+        "Stay somewhere safe and get appropriate help";
+
+    document.getElementById("answer3").textContent =
+        "Ignore the situation completely";
+
+    currentCorrect = 1;
+
+    resetQuestion();
+    speakAlert('Level two road emergency. Stay safe and call for help.');
+    showScreen("questionScreen");
+}
+
+
+// Weather level
+function startWeather() {
+
+    document.getElementById("levelTitle").textContent =
+        "🌧️ Level 3 — Severe Weather";
+
+    document.getElementById("question").textContent =
+        "During severe weather, what is usually the safest choice?";
+
+    document.getElementById("answer1").textContent =
+        "Move to a safer sheltered location and follow official advice";
+
+    document.getElementById("answer2").textContent =
+        "Go outside to watch the weather";
+
+    document.getElementById("answer3").textContent =
+        "Ignore official warnings";
+
+    currentCorrect = 0;
+
+    resetQuestion();
+    speakAlert('Level three severe weather. Move to shelter and follow official guidance.');
+    showScreen("questionScreen");
+}
+
+
+// Reset question
+function resetQuestion() {
+
+    document.getElementById("result").style.display = "none";
+
+    document.getElementById("nextButton").style.display = "none";
+
+    document.querySelectorAll(".answer").forEach(function(button) {
+        button.disabled = false;
+        button.style.opacity = "1";
+    });
+}
+
+
+// Answer question
+function answer(selected) {
+
+    let result = document.getElementById("result");
+
+    document.querySelectorAll(".answer").forEach(function(button) {
+        button.disabled = true;
+        button.style.opacity = "0.6";
+    });
+
+    result.style.display = "block";
+
+    if (selected === currentCorrect) {
+
+        result.className = "result correct";
+
+        result.innerHTML =
+            "✅ Correct!<br><br>" +
+            "That is the safer choice in this situation.<br><br>" +
+            "⭐ +100 XP";
+
+        addXP(100);
+
+    } else {
+
+        result.className = "result wrong";
+
+        result.innerHTML =
+            "❌ Not the safest choice.<br><br>" +
+            "Think about staying safe, following official guidance " +
+            "and getting appropriate help when needed.";
+
+    }
+
+    document.getElementById("nextButton").style.display = "block";
+}
+
+
+// Safety mode
+function toggleSafety() {
+
+    let status = document.getElementById("safetyStatus");
+
+    if (status.textContent === "Safety Mode OFF") {
+
+        status.textContent = "🟢 Safety Mode ON";
+
+    } else {
+
+        status.textContent = "Safety Mode OFF";
+
+    }
+}
+
+
+// Location demo
+function shareLocation() {
+
+    alert(
+        "📍 DEMO LOCATION\n\n" +
+        "Example location would be shared with your trusted contact.\n\n" +
+        "Real version would request location permission first."
+    );
+}
+
+
+// Save contact
+function saveContact() {
+
+    let contact = document.getElementById("contact").value.trim();
+    let phone = document.getElementById("phone").value.trim();
+
+    if (contact === "") {
+
+        document.getElementById("contactStatus").textContent =
+            "Please enter a contact name.";
+
+        return;
+    }
+
+    if (phone === "") {
+
+        document.getElementById("contactStatus").textContent =
+            "✅ Trusted contact saved: " + contact + " (phone not added yet)";
+
+        return;
+    }
+
+    document.getElementById("contactStatus").textContent =
+        "✅ Trusted contact saved: " + contact + " — " + phone;
+}
+
+
+// Send message
+function sendMessage() {
+
+    let message =
+        document.getElementById("message").value;
+
+    if (!message || message.trim() === "") {
+        alert("Please write a message before sending.");
+        return;
+    }
+
+    alert(
+        "💬 DEMO MESSAGE\n\n" +
+        message +
+        "\n\nThis is only a simulation."
+    );
+}
+
+
+// Emergency alert action
+function triggerEmergencyAlert() {
+
+    let contact = document.getElementById("contact").value.trim();
+    let message = document.getElementById("message").value.trim();
+
+    const alertText =
+        "Emergency alert. Move to a safe place. Call emergency services. Share your location." +
+        (contact ? " Trusted contact is " + contact + "." : " Trusted contact is not set.") +
+        " Message: " + (message || "I may need help. Please check on me.");
+
+    speakAlert(alertText);
+
+    alert(
+        "🚨 EMERGENCY ALERT\n\n" +
+        "1. Move to a safe place\n" +
+        "2. Call emergency services\n" +
+        "3. Share your location\n\n" +
+        (contact ? "Trusted contact: " + contact + "\n" : "Trusted contact: not set\n") +
+        "Message: " + (message || "I may need help. Please check on me.") +
+        "\n\nThis is a demo alert."
+    );
+}
+
+
+// Real sound functions using browser audio
+let audioContext = null;
+let uploadedSoundUrl = "";
+
+function getAudioContext() {
+
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+
+    if (!AudioContextClass) {
+        alert("Your browser does not support audio playback.");
+        return null;
+    }
+
+    if (!audioContext) {
+        audioContext = new AudioContextClass();
+    }
+
+    if (audioContext.state === "suspended") {
+        audioContext.resume();
+    }
+
+    return audioContext;
+}
+
+function playTone(options) {
+
+    const context = getAudioContext();
+
+    if (!context) return;
+
+    const oscillator = context.createOscillator();
+    const gainNode = context.createGain();
+
+    oscillator.type = options.type || "sine";
+    oscillator.frequency.setValueAtTime(options.frequency || 440, context.currentTime);
+
+    if (options.sweep) {
+        oscillator.frequency.exponentialRampToValueAtTime(
+            Math.max(80, options.frequency * options.sweep),
+            context.currentTime + (options.duration || 0.5)
+        );
+    }
+
+    gainNode.gain.setValueAtTime(0.0001, context.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(options.volume || 0.08, context.currentTime + 0.02);
+    gainNode.gain.exponentialRampToValueAtTime(0.0001, context.currentTime + (options.duration || 0.5));
+
+    oscillator.connect(gainNode);
+    gainNode.connect(context.destination);
+
+    oscillator.start();
+    oscillator.stop(context.currentTime + (options.duration || 0.5) + 0.05);
+}
+
+function playSiren() {
+
+    const context = getAudioContext();
+
+    if (!context) return;
+
+    const oscillator = context.createOscillator();
+    const gainNode = context.createGain();
+    const lfo = context.createOscillator();
+    const lfoGain = context.createGain();
+
+    oscillator.type = "sawtooth";
+    oscillator.frequency.value = 700;
+
+    lfo.type = "sine";
+    lfo.frequency.value = 6;
+    lfoGain.gain.value = 250;
+
+    lfo.connect(lfoGain);
+    lfoGain.connect(oscillator.frequency);
+
+    gainNode.gain.value = 0.035;
+
+    oscillator.connect(gainNode);
+    gainNode.connect(context.destination);
+
+    oscillator.start();
+    lfo.start();
+
+    setTimeout(function() {
+        oscillator.stop();
+        lfo.stop();
+    }, 1800);
+}
+
+function playAlarmSequence() {
+
+    const sequence = [520, 680, 820];
+
+    sequence.forEach(function(freq, index) {
+        setTimeout(function() {
+            playTone({
+                frequency: freq,
+                duration: 0.24,
+                type: "square",
+                volume: 0.07
+            });
+        }, index * 260);
+    });
+}
+
+function playPoliceSiren() {
+
+    const context = getAudioContext();
+
+    if (!context) return;
+
+    const oscillatorA = context.createOscillator();
+    const oscillatorB = context.createOscillator();
+    const gainNode = context.createGain();
+
+    oscillatorA.type = "sawtooth";
+    oscillatorB.type = "sawtooth";
+    oscillatorA.frequency.value = 660;
+    oscillatorB.frequency.value = 440;
+
+    const lfo = context.createOscillator();
+    const lfoGain = context.createGain();
+    lfo.type = "sine";
+    lfo.frequency.value = 4.5;
+    lfoGain.gain.value = 210;
+
+    lfo.connect(lfoGain);
+    lfoGain.connect(oscillatorA.frequency);
+    lfoGain.connect(oscillatorB.frequency);
+
+    gainNode.gain.value = 0.03;
+
+    oscillatorA.connect(gainNode);
+    oscillatorB.connect(gainNode);
+    gainNode.connect(context.destination);
+
+    oscillatorA.start();
+    oscillatorB.start();
+    lfo.start();
+
+    setTimeout(function() {
+        oscillatorA.stop();
+        oscillatorB.stop();
+        lfo.stop();
+    }, 1800);
+}
+
+function playMedicalAlert() {
+
+    const pattern = [620, 690, 760, 830];
+
+    pattern.forEach(function(freq, index) {
+        setTimeout(function() {
+            playTone({
+                frequency: freq,
+                duration: 0.18,
+                type: "triangle",
+                volume: 0.05,
+                sweep: 1.08
+            });
+        }, index * 220);
+    });
+}
+
+function playEvacuationTone() {
+
+    const sequence = [880, 640, 760, 540];
+
+    sequence.forEach(function(freq, index) {
+        setTimeout(function() {
+            playTone({
+                frequency: freq,
+                duration: 0.26,
+                type: "square",
+                volume: 0.06,
+                sweep: 0.92
+            });
+        }, index * 280);
+    });
+}
+
+function playImpactSound() {
+
+    const context = getAudioContext();
+
+    if (!context) return;
+
+    const hit1 = context.createOscillator();
+    const hit2 = context.createOscillator();
+    const gainNode = context.createGain();
+
+    hit1.type = "sawtooth";
+    hit2.type = "triangle";
+    hit1.frequency.setValueAtTime(140, context.currentTime);
+    hit2.frequency.setValueAtTime(90, context.currentTime);
+
+    hit1.frequency.exponentialRampToValueAtTime(42, context.currentTime + 0.18);
+    hit2.frequency.exponentialRampToValueAtTime(26, context.currentTime + 0.22);
+
+    gainNode.gain.setValueAtTime(0.0001, context.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.18, context.currentTime + 0.02);
+    gainNode.gain.exponentialRampToValueAtTime(0.0001, context.currentTime + 0.26);
+
+    hit1.connect(gainNode);
+    hit2.connect(gainNode);
+    gainNode.connect(context.destination);
+
+    hit1.start();
+    hit2.start();
+    hit1.stop(context.currentTime + 0.2);
+    hit2.stop(context.currentTime + 0.26);
+
+    setTimeout(function() {
+        const secondHit = context.createOscillator();
+        const secondGain = context.createGain();
+
+        secondHit.type = "square";
+        secondHit.frequency.setValueAtTime(110, context.currentTime);
+        secondHit.frequency.exponentialRampToValueAtTime(35, context.currentTime + 0.12);
+
+        secondGain.gain.setValueAtTime(0.0001, context.currentTime);
+        secondGain.gain.exponentialRampToValueAtTime(0.12, context.currentTime + 0.01);
+        secondGain.gain.exponentialRampToValueAtTime(0.0001, context.currentTime + 0.14);
+
+        secondHit.connect(secondGain);
+        secondGain.connect(context.destination);
+
+        secondHit.start();
+        secondHit.stop(context.currentTime + 0.15);
+    }, 140);
+}
+
+function playSound(type) {
+
+    const voiceMessages = {
+        siren: 'Emergency siren. Stay alert and move away from danger.',
+        police: 'Police siren. High priority emergency response.',
+        alarm: 'Fire alarm. Evacuate and follow safety instructions.',
+        medical: 'Medical alert. Seek urgent medical help immediately.',
+        evacuation: 'Evacuation tone. Leave the area and follow instructions.',
+        impact: 'Impact sound. Check for danger and call for help if needed.'
+    };
+
+    if (voiceMessages[type]) {
+        speakAlert(voiceMessages[type]);
+    }
+
+    if (type === "siren") {
+        playSiren();
+    }
+
+    else if (type === "police") {
+        playPoliceSiren();
+    }
+
+    else if (type === "alarm") {
+        playAlarmSequence();
+    }
+
+    else if (type === "medical") {
+        playMedicalAlert();
+    }
+
+    else if (type === "evacuation") {
+        playEvacuationTone();
+    }
+
+    else if (type === "impact") {
+        playImpactSound();
+    }
+}
+
+function handleSoundUpload(event) {
+
+    const file = event.target.files[0];
+
+    if (!file) {
+        return;
+    }
+
+    uploadedSoundUrl = URL.createObjectURL(file);
+    document.getElementById("soundStatus").textContent =
+        "✅ Sound ready: " + file.name;
+}
+
+function playUploadedSound() {
+
+    if (!uploadedSoundUrl) {
+        alert("Please upload an audio file first.");
+        return;
+    }
+
+    const audio = new Audio(uploadedSoundUrl);
+    audio.play();
+}
+
+function getAiRecommendation(description) {
+
+    const text = description.toLowerCase();
+
+    if (/(fire|smoke|burning|flame|heat)/.test(text)) {
+        return "AI recommendation: Leave the area immediately, alert others, and call the fire service. Do not use elevators and move to a safe meeting point away from smoke.";
+    }
+
+    if (/(medical|injured|bleeding|hurt|pain|chest|unconscious|fainted)/.test(text)) {
+        return "AI recommendation: Call emergency medical help right away, keep the person calm, and do not move them unless they are in immediate danger. If they are unconscious or struggling to breathe, seek urgent help immediately.";
+    }
+
+    if (/(accident|car|road|traffic|crash|vehicle|hit)/.test(text)) {
+        return "AI recommendation: Move to a safe place away from traffic. Call emergency services and warn others if it is safe to do so. Stay visible and avoid standing in the road.";
+    }
+
+    if (/(storm|flood|rain|lightning|wind|weather|dangerous)/.test(text)) {
+        return "AI recommendation: Move to shelter, avoid flooded roads, and stay away from open areas during lightning or strong winds. Follow local emergency warnings.";
+    }
+
+    if (/(locked|trapped|stuck|alone|scared|afraid)/.test(text)) {
+        return "AI recommendation: Stay where you are if it is safer than moving, call for help, and keep your phone charged. Share your location with a trusted person if possible.";
+    }
+
+    return "AI recommendation: Stay calm, move to a safe place, call the right emergency service if needed, and share your location with someone you trust while you wait for help.";
+}
+
+function addAiMessage(sender, text) {
+
+    const chatBox = document.getElementById("aiChatBox");
+    const message = document.createElement("div");
+    message.className = "message " + sender;
+    message.textContent = (sender === "user" ? "You: " : "AI: ") + text;
+    chatBox.appendChild(message);
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+function askAi() {
+
+    const input = document.getElementById("aiInput");
+    const text = input.value.trim();
+
+    if (!text) {
+        alert("Please describe the emergency situation first.");
+        return;
+    }
+
+    addAiMessage("user", text);
+
+    const recommendation = getAiRecommendation(text);
+    addAiMessage("ai", recommendation);
+    speakAlert(recommendation);
+
+    input.value = "";
+}
+
+// Sound upload binding
+const soundUploadInput = document.getElementById("soundUpload");
+
+if (soundUploadInput) {
+    soundUploadInput.addEventListener("change", handleSoundUpload);
+}
+
+
+// Camera simulation
+function startCameraDemo() {
+
+    let box =
+        document.getElementById("cameraBox");
+
+    let result =
+        document.getElementById("cameraResult");
+
+    box.innerHTML =
+        "🔍<br><br>AI is analysing the scene...";
+
+    result.style.display = "block";
+
+    result.className = "result";
+
+    result.innerHTML =
+        "⏳ Scanning...";
+
+    setTimeout(function() {
+
+        box.innerHTML =
+            "📷<br><br>Demo Camera Active";
+
+        result.className = "result wrong";
+
+        result.innerHTML =
+            "⚠️ Possible emergency detected.<br><br>" +
+            "This is only a simulated AI result.<br><br>" +
+            "In a real version, the user would be asked to confirm " +
+            "before an alert is sent.";
+
+    }, 2000);
+}
+
+</script>
+
+</body>
+</html>
