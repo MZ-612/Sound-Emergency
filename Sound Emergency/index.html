@@ -3,52 +3,52 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Emergency Mission - professional emergency awareness and training website." />
+  <meta name="description" content="Emergency Mission is an educational emergency awareness app with training missions, sound tools, safety mode, and AI demo features." />
   <title>Emergency Mission | Learn • React • Stay Safe</title>
   <style>
     :root {
       --bg: #07111f;
-      --bg-2: #0d1b2e;
-      --panel: #112541;
-      --panel-2: #172d4a;
+      --bg-2: #0a1730;
+      --panel: #101f34;
+      --panel-2: #152b46;
       --panel-3: #0b1728;
       --line: #2a4469;
       --text: #edf6ff;
       --muted: #aac0d6;
       --blue: #4f8cff;
-      --blue-soft: #8db8ff;
+      --blue-soft: #9ec0ff;
       --green: #34d399;
       --red: #ef5350;
       --amber: #f7c948;
-      --shadow: 0 20px 55px rgba(0,0,0,0.26);
+      --shadow: 0 20px 52px rgba(0,0,0,0.26);
     }
 
     * { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
     body {
       margin: 0;
-      background: radial-gradient(circle at top right, #183b69 0%, #07111f 40%, #07111f 100%);
+      background: radial-gradient(circle at top right, #183b69 0%, #07111f 38%, #07111f 100%);
       color: var(--text);
       font-family: Arial, Helvetica, sans-serif;
     }
 
     a { color: inherit; text-decoration: none; }
-    button, input, select, textarea {
+    button, input, textarea, select {
       font: inherit;
     }
 
     .shell {
-      width: min(1160px, calc(100% - 24px));
+      width: min(1150px, calc(100% - 24px));
       margin: 0 auto;
     }
 
     .topbar {
       position: sticky;
       top: 0;
-      z-index: 30;
-      background: rgba(7, 17, 31, 0.9);
-      border-bottom: 1px solid rgba(42, 68, 105, 0.9);
-      backdrop-filter: blur(12px);
+      z-index: 20;
+      background: rgba(7,17,31,0.9);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(42,68,105,0.9);
     }
 
     .nav {
@@ -60,7 +60,7 @@
     }
 
     .brand {
-      font-size: 1.2rem;
+      font-size: 1.18rem;
       font-weight: 800;
       letter-spacing: 0.04em;
     }
@@ -72,17 +72,17 @@
       flex-wrap: wrap;
     }
 
-    .nav-links button, .btn {
+    .btn {
       border: 1px solid var(--line);
-      background: rgba(17, 37, 65, 0.85);
+      background: rgba(17, 37, 65, 0.9);
       color: var(--text);
       border-radius: 12px;
-      padding: 10px 16px;
+      padding: 11px 16px;
       cursor: pointer;
       transition: 0.2s ease;
     }
 
-    .nav-links button:hover, .btn:hover {
+    .btn:hover {
       transform: translateY(-1px);
       border-color: var(--blue);
       background: var(--panel-2);
@@ -91,39 +91,48 @@
     .btn.primary {
       background: var(--blue);
       border-color: var(--blue);
-      color: white;
-    }
-
-    .btn.danger {
-      background: #8d2021;
-      border-color: var(--red);
+      color: #fff;
     }
 
     .btn.secondary {
-      background: #142b45;
+      background: #122b46;
       border-color: var(--line);
     }
 
+    .btn.danger {
+      background: #8c1d1d;
+      border-color: rgba(239,83,80,0.7);
+    }
+
+    .screen {
+      display: none;
+      padding: 34px 0 54px;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
     .hero {
-      padding: 72px 0 54px;
       display: grid;
-      grid-template-columns: 1.05fr 0.95fr;
-      gap: 46px;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 42px;
       align-items: center;
+      padding-top: 52px;
     }
 
     .eyebrow {
       color: var(--blue-soft);
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      font-size: 0.74rem;
+      font-size: 0.72rem;
       font-weight: 700;
-      margin-bottom: 18px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
     }
 
     h1 {
       margin: 0;
-      font-size: clamp(2.8rem, 6vw, 5.2rem);
+      font-size: clamp(2.9rem, 6vw, 5.3rem);
       line-height: 0.98;
       letter-spacing: -0.07em;
     }
@@ -137,22 +146,33 @@
       font-size: 1.06rem;
       line-height: 1.75;
       margin-top: 18px;
-      max-width: 620px;
+      max-width: 630px;
     }
 
     .hero-actions {
       display: flex;
       flex-wrap: wrap;
       gap: 12px;
-      margin-top: 28px;
+      margin-top: 26px;
+    }
+
+    .hero-card,
+    .card,
+    .feature,
+    .panel,
+    .profile-box,
+    .result-box,
+    .training-box,
+    .helper-box,
+    .camera-box {
+      background: linear-gradient(180deg, #112541 0%, #0b1728 100%);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      box-shadow: var(--shadow);
     }
 
     .hero-card {
-      background: linear-gradient(180deg, #102541 0%, #0b1728 100%);
-      border: 1px solid var(--line);
-      border-radius: 22px;
       padding: 26px;
-      box-shadow: var(--shadow);
     }
 
     .status-line {
@@ -167,15 +187,15 @@
     .status-dot {
       width: 10px;
       height: 10px;
-      background: var(--green);
       border-radius: 50%;
-      box-shadow: 0 0 0 8px rgba(52, 211, 153, 0.13);
+      background: var(--green);
+      box-shadow: 0 0 0 8px rgba(52,211,153,0.12);
     }
 
     .hero-card h2 {
       margin: 0 0 10px;
-      font-size: clamp(1.8rem, 3vw, 2.7rem);
-      letter-spacing: -0.04em;
+      font-size: clamp(1.8rem, 3vw, 2.8rem);
+      letter-spacing: -0.05em;
     }
 
     .intro {
@@ -186,13 +206,13 @@
 
     .stats {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: repeat(3, minmax(0,1fr));
       gap: 10px;
       margin-top: 22px;
     }
 
     .stat {
-      background: rgba(7, 17, 31, 0.8);
+      background: rgba(7,17,31,0.8);
       border: 1px solid var(--line);
       border-radius: 12px;
       padding: 14px 10px;
@@ -201,30 +221,26 @@
 
     .stat strong {
       display: block;
-      font-size: 1.7rem;
+      font-size: 1.8rem;
       margin-bottom: 6px;
     }
 
     .stat small {
       color: var(--muted);
-      font-size: 0.74rem;
-    }
-
-    .section {
-      padding: 34px 0 42px;
+      font-size: 0.72rem;
     }
 
     .section-head {
       display: flex;
-      justify-content: space-between;
       align-items: end;
-      gap: 14px;
-      margin-bottom: 20px;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 18px;
     }
 
     .section-head h2 {
       margin: 0;
-      font-size: clamp(2rem, 3vw, 2.9rem);
+      font-size: clamp(2rem, 3vw, 2.8rem);
       letter-spacing: -0.05em;
     }
 
@@ -236,48 +252,41 @@
 
     .grid {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: repeat(3, minmax(0,1fr));
       gap: 18px;
     }
 
-    .feature-card,
-    .card-box {
-      background: linear-gradient(180deg, #112541 0%, #0b1728 100%);
-      border: 1px solid var(--line);
-      border-radius: 16px;
+    .feature {
       padding: 22px;
-      box-shadow: var(--shadow);
     }
 
-    .feature-card h3,
-    .card-box h3 {
+    .feature h3 {
       margin: 10px 0 8px;
-      font-size: 1.24rem;
+      font-size: 1.28rem;
     }
 
-    .feature-card p,
-    .card-box p,
+    .feature p,
     .small {
       margin: 0;
       color: var(--muted);
       line-height: 1.7;
     }
 
-    .wide {
-      grid-column: span 2;
-    }
-
     .tag {
       display: inline-block;
-      font-size: 0.72rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      font-weight: 700;
+      background: rgba(79,140,255,0.08);
+      border: 1px solid rgba(79,140,255,0.3);
       color: var(--blue-soft);
-      background: rgba(79, 140, 255, 0.08);
-      border: 1px solid rgba(79, 140, 255, 0.25);
       border-radius: 999px;
       padding: 7px 10px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .wide {
+      grid-column: span 2;
     }
 
     .mission-panel {
@@ -285,18 +294,14 @@
       margin: 0 auto;
     }
 
-    .training-card {
-      background: linear-gradient(180deg, #102541 0%, #0b1728 100%);
-      border: 1px solid var(--line);
-      border-radius: 20px;
+    .training-box {
       padding: 24px;
-      box-shadow: var(--shadow);
     }
 
     .training-top {
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
       gap: 12px;
       flex-wrap: wrap;
       margin-bottom: 18px;
@@ -304,8 +309,8 @@
 
     .level-pill {
       display: inline-block;
-      border: 1px solid rgba(79,140,255,0.3);
       background: rgba(79,140,255,0.08);
+      border: 1px solid rgba(79,140,255,0.35);
       color: var(--blue-soft);
       border-radius: 999px;
       padding: 7px 12px;
@@ -316,8 +321,8 @@
     }
 
     .xp-pill {
-      border: 1px solid rgba(247,201,73,0.35);
       background: rgba(247,201,73,0.08);
+      border: 1px solid rgba(247,201,73,0.35);
       color: var(--amber);
       border-radius: 999px;
       padding: 7px 12px;
@@ -326,10 +331,10 @@
 
     .progress {
       height: 10px;
+      background: rgba(7,17,31,0.85);
+      border: 1px solid var(--line);
       border-radius: 999px;
       overflow: hidden;
-      border: 1px solid var(--line);
-      background: rgba(7, 17, 31, 0.85);
       margin: 18px 0 22px;
     }
 
@@ -341,19 +346,19 @@
     }
 
     .question-label {
-      color: var(--blue-soft);
-      font-size: 0.74rem;
-      letter-spacing: 0.09em;
-      text-transform: uppercase;
-      font-weight: 700;
       margin: 0 0 12px;
+      color: var(--blue-soft);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.74rem;
+      font-weight: 700;
     }
 
     .question-text {
-      font-size: clamp(1.5rem, 3vw, 2.2rem);
+      margin: 0 0 18px;
+      font-size: clamp(1.6rem, 3vw, 2.3rem);
       line-height: 1.35;
       letter-spacing: -0.04em;
-      margin: 0 0 18px;
     }
 
     .answers {
@@ -364,11 +369,11 @@
     .answer-btn {
       width: 100%;
       text-align: left;
-      border: 1px solid var(--line);
-      background: rgba(7, 17, 31, 0.8);
-      color: var(--text);
-      border-radius: 12px;
       padding: 14px 16px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: rgba(7,17,31,0.8);
+      color: var(--text);
       cursor: pointer;
       transition: 0.2s ease;
       font-weight: 600;
@@ -376,41 +381,41 @@
 
     .answer-btn:hover {
       border-color: var(--blue);
-      background: #132a43;
+      background: #122a43;
     }
 
     .answer-btn.correct {
-      border-color: rgba(52, 211, 153, 0.75);
-      background: rgba(52, 211, 153, 0.1);
-      color: #dbfff4;
+      border-color: rgba(52,211,153,0.7);
+      background: rgba(52,211,153,0.12);
+      color: #dffff2;
     }
 
     .answer-btn.wrong {
-      border-color: rgba(239, 83, 80, 0.75);
-      background: rgba(239, 83, 80, 0.1);
+      border-color: rgba(239,83,80,0.7);
+      background: rgba(239,83,80,0.12);
       color: #ffd9d9;
     }
 
     .feedback {
+      min-height: 72px;
       margin-top: 18px;
-      min-height: 70px;
       border-radius: 12px;
       border: 1px solid var(--line);
-      background: rgba(7, 17, 31, 0.8);
+      background: rgba(7,17,31,0.8);
       color: var(--muted);
       padding: 14px 16px;
       line-height: 1.6;
     }
 
     .feedback.success {
-      background: rgba(52, 211, 153, 0.08);
-      border-color: rgba(52,211,153,0.5);
+      background: rgba(52,211,153,0.08);
+      border-color: rgba(52,211,153,0.55);
       color: #dbfff4;
     }
 
     .feedback.error {
-      background: rgba(239, 83, 80, 0.08);
-      border-color: rgba(239,83,80,0.5);
+      background: rgba(239,83,80,0.08);
+      border-color: rgba(239,83,80,0.55);
       color: #ffd9d9;
     }
 
@@ -424,26 +429,22 @@
     }
 
     .result-box {
-      max-width: 780px;
+      max-width: 760px;
       margin: 0 auto;
-      background: linear-gradient(180deg, #112541 0%, #0b1728 100%);
-      border: 1px solid var(--line);
-      border-radius: 20px;
-      box-shadow: var(--shadow);
-      padding: 30px 24px;
+      padding: 28px 22px;
       text-align: center;
     }
 
     .result-box h3 {
-      font-size: clamp(1.9rem, 3vw, 2.8rem);
       margin: 0 0 12px;
-      letter-spacing: -0.04em;
+      font-size: clamp(1.9rem, 3vw, 2.8rem);
+      letter-spacing: -0.05em;
     }
 
     .score-pill {
       display: inline-block;
-      background: rgba(79, 140, 255, 0.08);
-      border: 1px solid rgba(79, 140, 255, 0.35);
+      background: rgba(79,140,255,0.08);
+      border: 1px solid rgba(79,140,255,0.35);
       border-radius: 12px;
       padding: 10px 14px;
       font-weight: 700;
@@ -456,45 +457,43 @@
       margin: 0;
     }
 
-    .sound-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 14px;
-      padding: 16px 0;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .sound-row:last-child {
-      border-bottom: none;
-    }
-
-    .footer {
-      padding: 28px 0 42px;
-      border-top: 1px solid rgba(42,68,105,0.85);
-      margin-top: 24px;
-      color: var(--muted);
-    }
-
+    .helper-box,
+    .camera-box,
     .profile-box {
-      max-width: 760px;
-      margin: 0 auto;
-      background: linear-gradient(180deg, #102541 0%, #0b1728 100%);
-      border: 1px solid var(--line);
-      border-radius: 18px;
       padding: 24px;
-      box-shadow: var(--shadow);
     }
 
-    .field {
-      display: grid;
-      gap: 8px;
-      margin-top: 14px;
-      color: var(--muted);
+    .chat-box {
+      max-height: 240px;
+      overflow-y: auto;
+      padding: 12px;
+      background: rgba(7,17,31,0.8);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      margin-bottom: 12px;
+    }
+
+    .msg {
+      max-width: 88%;
+      border-radius: 12px;
+      padding: 10px 12px;
+      margin: 8px 0;
+      line-height: 1.5;
       font-size: 0.95rem;
     }
 
-    input, textarea {
+    .msg.ai {
+      background: #152d4d;
+      border: 1px solid var(--line);
+    }
+
+    .msg.user {
+      background: #184d9d;
+      margin-left: auto;
+      border: 1px solid rgba(79,140,255,0.4);
+    }
+
+    textarea,input {
       width: 100%;
       background: #07111f;
       color: var(--text);
@@ -504,16 +503,23 @@
       outline: none;
     }
 
-    input:focus, textarea:focus {
+    textarea:focus,input:focus {
       border-color: var(--blue);
+    }
+
+    .field {
+      display: grid;
+      gap: 8px;
+      margin-top: 14px;
+      color: var(--muted);
     }
 
     .profile-summary {
       margin-top: 18px;
-      padding: 16px;
+      background: rgba(7,17,31,0.8);
       border: 1px solid var(--line);
-      background: rgba(7, 17, 31, 0.8);
       border-radius: 12px;
+      padding: 14px 16px;
       display: none;
     }
 
@@ -539,10 +545,47 @@
       word-break: break-word;
     }
 
+    .camera-box {
+      min-height: 180px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      border: 2px dashed rgba(100, 116, 139, 0.9);
+      background: #050d18;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .camera-box strong {
+      color: var(--text);
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .sound-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      padding: 15px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .sound-row:last-child {
+      border-bottom: none;
+    }
+
+    .footer {
+      margin-top: 12px;
+      padding: 26px 0 40px;
+      border-top: 1px solid rgba(42,68,105,0.85);
+      color: var(--muted);
+    }
+
     @media (max-width: 860px) {
       .hero {
         grid-template-columns: 1fr;
-        padding-top: 40px;
+        padding-top: 32px;
       }
       .grid {
         grid-template-columns: 1fr;
@@ -564,11 +607,12 @@
     <div class="shell nav">
       <div class="brand">Emergency Mission</div>
       <nav class="nav-links">
-        <button type="button" data-target="home">Home</button>
-        <button type="button" data-target="mission">Mission</button>
-        <button type="button" data-target="safety">Safety</button>
-        <button type="button" data-target="sounds">Sounds</button>
-        <button type="button" data-target="profile" class="btn primary">Profile</button>
+        <button type="button" class="btn secondary" data-target="home">Home</button>
+        <button type="button" class="btn secondary" data-target="missions">Missions</button>
+        <button type="button" class="btn secondary" data-target="assistant">AI assistant</button>
+        <button type="button" class="btn secondary" data-target="safety">Safety</button>
+        <button type="button" class="btn secondary" data-target="sounds">Sounds</button>
+        <button type="button" class="btn primary" data-target="profile">Profile</button>
       </nav>
     </div>
   </header>
@@ -579,17 +623,17 @@
         <div>
           <div class="eyebrow">Emergency readiness platform</div>
           <h1>Learn. React. <span>Stay Safe.</span></h1>
-          <p class="lead">Emergency Mission is an educational safety app designed to help people practise safer decision-making in emergency situations through guided scenarios, training, and quick-access safety tools.</p>
+          <p class="lead">Emergency Mission is an educational safety app designed to help people practise safer decision-making in emergency situations through guided missions, sound recognition, and quick safety tools.</p>
           <div class="hero-actions">
-            <button type="button" class="btn primary" data-target="mission">Start mission</button>
-            <button type="button" class="btn secondary" data-target="safety">Safety tools</button>
+            <button type="button" class="btn primary" data-target="missions">Start mission</button>
+            <button type="button" class="btn secondary" data-target="assistant">AI assistant</button>
           </div>
         </div>
 
         <aside class="hero-card">
           <div class="status-line"><span class="status-dot"></span> Preparedness overview</div>
-          <h2>Personal safety hub</h2>
-          <p class="intro">Build confidence by practicing realistic emergency decisions in a safe learning environment.</p>
+          <h2>Safety dashboard</h2>
+          <p class="intro">Build confidence by practicing emergency decisions in a safe learning environment.</p>
           <div class="stats">
             <div class="stat">
               <strong id="readyPercent">0%</strong>
@@ -605,13 +649,13 @@
             </div>
           </div>
           <div class="hero-actions">
-            <button type="button" class="btn primary" data-target="mission">Continue</button>
+            <button type="button" class="btn primary" data-target="missions">Continue</button>
           </div>
         </aside>
       </div>
     </section>
 
-    <section id="mission" class="screen">
+    <section id="missions" class="screen">
       <div class="shell">
         <div class="section-head">
           <div>
@@ -621,7 +665,7 @@
         </div>
 
         <div class="grid">
-          <div class="feature-card">
+          <div class="feature">
             <span class="tag">Fire</span>
             <h3>Fire alarm response</h3>
             <p>Understand how to react when an alarm starts and how to evacuate safely.</p>
@@ -630,7 +674,7 @@
             </div>
           </div>
 
-          <div class="feature-card">
+          <div class="feature">
             <span class="tag">Road</span>
             <h3>Road emergency</h3>
             <p>Learn how to stay safe around accidents and dangerous traffic situations.</p>
@@ -639,7 +683,7 @@
             </div>
           </div>
 
-          <div class="feature-card">
+          <div class="feature">
             <span class="tag">Weather</span>
             <h3>Severe weather</h3>
             <p>Practice how to respond to severe weather warnings and environmental hazards.</p>
@@ -653,7 +697,7 @@
 
     <section id="training" class="screen">
       <div class="shell mission-panel">
-        <div class="training-card">
+        <div class="training-box">
           <div class="training-top">
             <span class="level-pill" id="levelPill">Level 1</span>
             <span class="xp-pill" id="xpDisplay">XP: 0</span>
@@ -668,7 +712,7 @@
             <div id="feedbackBox" class="feedback">Choose the safest response.</div>
             <div class="row-actions">
               <button type="button" id="nextQuestionBtn" class="btn primary hidden">Next question</button>
-              <button type="button" class="btn secondary" data-target="mission">Back to missions</button>
+              <button type="button" class="btn secondary" data-target="missions">Back to missions</button>
             </div>
           </div>
         </div>
@@ -680,10 +724,32 @@
         <div class="result-box">
           <h3>Training complete</h3>
           <div id="scorePill" class="score-pill">0 / 10 correct</div>
-          <p id="resultText">Congratulations. You completed the emergency training set.</p>
+          <p id="resultText">You completed the emergency training set.</p>
           <div class="row-actions" style="justify-content:center;">
             <button type="button" class="btn primary" id="restartBtn">Restart training</button>
-            <button type="button" class="btn secondary" data-target="mission">Mission list</button>
+            <button type="button" class="btn secondary" data-target="missions">Mission list</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="assistant" class="screen">
+      <div class="shell">
+        <div class="section-head">
+          <div>
+            <h2>AI safety assistant</h2>
+          </div>
+          <p>Demo assistant for general guidance and safety advice.</p>
+        </div>
+
+        <div class="helper-box">
+          <div class="chat-box" id="chatBox">
+            <div class="msg ai">Hello. Describe the situation and I can suggest general first steps for safety.</div>
+          </div>
+
+          <div class="row-actions" style="margin-top: 0;">
+            <input id="assistantInput" type="text" placeholder="Describe what is happening..." style="flex:1; min-width:220px;" />
+            <button type="button" class="btn primary" id="sendAssistantBtn">Send</button>
           </div>
         </div>
       </div>
@@ -693,31 +759,40 @@
       <div class="shell">
         <div class="section-head">
           <div>
-            <h2>Safety tools</h2>
+            <h2>Safety mode</h2>
           </div>
-          <p>Quick access to useful emergency guidance and readiness support.</p>
+          <p>Quick access to safety actions and trusted support.</p>
         </div>
 
         <div class="grid">
-          <div class="feature-card">
-            <span class="tag">Checklist</span>
-            <h3>Emergency checklist</h3>
-            <p>Track essentials such as emergency supplies, contact plans, and practical readiness actions.</p>
-          </div>
-          <div class="feature-card">
+          <div class="feature">
             <span class="tag">Contact</span>
             <h3>Trusted contact</h3>
-            <p>Keep a trusted contact ready and store important details locally in your profile.</p>
+            <p>Keep a trusted person ready and store important details in the profile section.</p>
           </div>
-          <div class="feature-card">
+          <div class="feature">
             <span class="tag">Message</span>
             <h3>Emergency message</h3>
-            <p>Create a short emergency message that can be used to communicate urgency and location.</p>
+            <p>Use a short message to let someone know you may need help.</p>
           </div>
-          <div class="feature-card wide">
+          <div class="feature">
             <span class="tag">Location</span>
-            <h3>Location support</h3>
-            <p>Use a safe, user-confirmed flow for location sharing only when the situation is serious and the user chooses to act. This keeps the user in control.</p>
+            <h3>Location sharing</h3>
+            <p>Use a safe, user-confirmed flow to share location when needed.</p>
+          </div>
+          <div class="feature wide">
+            <span class="tag">AI demo</span>
+            <h3>Camera scan simulation</h3>
+            <p>This is a simulated AI demo for awareness and presentation purposes. Real detection would require proper AI development, permissions, and review.</p>
+            <div class="hero-actions">
+              <button type="button" class="btn primary" id="scanCameraBtn">Scan area</button>
+            </div>
+            <div class="camera-box" id="cameraBox" style="margin-top:16px;">
+              <div>
+                <strong>AI camera demo</strong>
+                <span id="cameraStatus">No scan started yet.</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -727,12 +802,12 @@
       <div class="shell">
         <div class="section-head">
           <div>
-            <h2>Sound library</h2>
+            <h2>Emergency sound library</h2>
           </div>
-          <p>Learn to recognise common emergency alarms and warning sounds.</p>
+          <p>Recognise warning patterns and emergency cues.</p>
         </div>
 
-        <div class="card-box">
+        <div class="panel" style="padding: 22px;">
           <div class="sound-row">
             <div>
               <h3>Siren</h3>
@@ -765,7 +840,7 @@
             <button type="button" class="btn primary" data-sound="evacuation">Play</button>
           </div>
 
-          <div class="row-actions" style="margin-top: 18px;">
+          <div class="row-actions">
             <button type="button" class="btn secondary" id="stopSoundBtn">Stop sound</button>
           </div>
         </div>
@@ -775,8 +850,8 @@
     <section id="profile" class="screen">
       <div class="shell">
         <div class="profile-box">
-          <h2>Professional profile</h2>
-          <p class="small">Save your profile locally in the browser. This information is kept on the device and is not sent to a server.</p>
+          <h2>Profile</h2>
+          <p class="small">Save safety information locally on this device. This is a browser-local demo and remains on the device only.</p>
 
           <div class="field">
             <label for="nameInput">Full name</label>
@@ -827,102 +902,67 @@
   <footer class="footer">
     <div class="shell">
       <div>Emergency Mission</div>
-      <p class="small">Educational emergency awareness and preparation. This website supports learning and does not replace official emergency response services.</p>
+      <p class="small">Educational emergency awareness and preparation. This website supports learning and does not replace professional emergency response services.</p>
     </div>
   </footer>
 
   <script>
-    const allScreens = ['home', 'mission', 'training', 'results', 'safety', 'sounds', 'profile'];
+    const allScreens = ['home', 'missions', 'training', 'results', 'assistant', 'safety', 'sounds', 'profile'];
 
     const trainingQuestions = [
       {
         level: 'Level 1',
         label: 'Fire emergency',
         question: 'A fire alarm starts sounding in a building. What is the safest action?',
-        options: [
-          'Ignore the alarm and continue working',
-          'Follow the alarm procedure and move to a safe place',
-          'Return inside for personal items',
-          'Stay near the exit and wait for others'
-        ],
+        options: ['Ignore the alarm and continue working', 'Follow the evacuation procedure and move to a safe place', 'Go back inside for personal belongings', 'Wait near the exit and let others decide'],
         answer: 1,
-        explanation: 'A fire alarm is an urgent warning. Follow the emergency procedure and evacuate to a safe assembly point.'
+        explanation: 'A fire alarm is an urgent warning. Follow the emergency procedure and evacuate to a safe area.'
       },
       {
         level: 'Level 1',
         label: 'Road emergency',
         question: 'You see a road accident near a busy road. What should you do first?',
-        options: [
-          'Move closer to observe the situation',
-          'Stay back, keep yourself safe, and call for help',
-          'Drive around the scene without reporting',
-          'Ignore it if no one is visibly hurt'
-        ],
+        options: ['Move closer to observe', 'Stay back, keep yourself safe, and contact help', 'Drive around the scene without reporting it', 'Ignore it if no one is visibly hurt'],
         answer: 1,
-        explanation: 'Do not put yourself in danger. Stay safe, keep distance, and contact the correct emergency service.'
+        explanation: 'Do not put yourself in danger. Keep distance and call the correct emergency service.'
       },
       {
         level: 'Level 1',
         label: 'Severe weather',
         question: 'A severe weather warning is issued. What is the safest action?',
-        options: [
-          'Go outside to watch the storm',
-          'Move to a safer indoor shelter and follow official guidance',
-          'Stand by a window to monitor conditions',
-          'Ignore the warning if conditions look calm'
-        ],
+        options: ['Go outside to watch the storm', 'Move to a safer indoor shelter and follow official guidance', 'Stand by a window to monitor conditions', 'Ignore the warning if conditions look calm'],
         answer: 1,
-        explanation: 'Severe weather requires moving to a safe indoor area and following official alerts and instructions.'
+        explanation: 'Severe weather requires moving to a safe indoor area and following guidance.'
       },
       {
         level: 'Level 2',
         label: 'Medical emergency',
         question: 'Someone collapses and is not responding. What should you do first?',
-        options: [
-          'Wait for them to wake up',
-          'Call emergency services and follow instructions',
-          'Move them to a different room',
-          'Leave the area and assume someone else will help'
-        ],
+        options: ['Wait for them to wake up', 'Call emergency services and follow instructions', 'Move them to a different room', 'Leave the area and assume someone else will help'],
         answer: 1,
-        explanation: 'Call emergency services immediately and follow their instruction. Delay can increase risk.'
+        explanation: 'Call emergency services immediately and follow their instructions.'
       },
       {
         level: 'Level 2',
         label: 'Gas smell',
         question: 'You smell gas in a building. What is the safest action?',
-        options: [
-          'Search indoors for the source with lights on',
-          'Avoid flames, leave the area, and contact emergency services',
-          'Close the door and wait quietly',
-          'Use your phone indoors to locate the source'
-        ],
+        options: ['Search indoors for the source with lights on', 'Avoid flames, leave the area, and contact emergency services', 'Close the door and wait quietly', 'Use your phone indoors to locate the source'],
         answer: 1,
-        explanation: 'Gas can be dangerous and highly flammable. Leave the area and alert the right service.'
+        explanation: 'Gas can be dangerous and highly flammable. Leave the area and alert the proper service.'
       },
       {
         level: 'Level 2',
-        label: 'Flood warning',
+        label: 'Flood risk',
         question: 'You notice rising water near a road. What should you do?',
-        options: [
-          'Drive through if it looks shallow',
-          'Stand closer to measure the depth',
-          'Avoid the area and move to higher ground',
-          'Continue because traffic is moving'
-        ],
+        options: ['Drive through if it looks shallow', 'Stand closer to measure the depth', 'Avoid the area and move to higher ground', 'Continue because traffic is moving'],
         answer: 2,
-        explanation: 'Floodwater is unpredictable and can be deadly. Avoid it and move to a safer area.'
+        explanation: 'Floodwater is unpredictable and dangerous. Avoid it and move to a safer location.'
       },
       {
         level: 'Level 3',
         label: 'Power line',
         question: 'A power line is lying across a road after a storm. What is the safest action?',
-        options: [
-          'Drive over it carefully if traffic is light',
-          'Stay away, keep distance, and contact emergency services',
-          'Touch it to check if it is active',
-          'Try to move it with a metal tool'
-        ],
+        options: ['Drive over it carefully if traffic is light', 'Stay away, keep distance, and contact emergency services', 'Touch it to check if it is active', 'Try to move it with a metal tool'],
         answer: 1,
         explanation: 'Downed power lines are extremely dangerous. Keep distance and report them immediately.'
       },
@@ -930,38 +970,23 @@
         level: 'Level 3',
         label: 'Evacuation',
         question: 'Officials issue a clear evacuation instruction during a hazard. What is the safe response?',
-        options: [
-          'Wait to see if others leave first',
-          'Follow official instructions and evacuate promptly',
-          'Stay inside to protect belongings',
-          'Ignore it if the warning seems overdone'
-        ],
+        options: ['Wait to see if others leave first', 'Follow official instructions and evacuate promptly', 'Stay inside to protect belongings', 'Ignore it if the warning seems overdone'],
         answer: 1,
-        explanation: 'Official evacuation guidance is intended to protect people. Follow it and move to safety.'
+        explanation: 'Official evacuation guidance is there to protect people. Follow it and move to safety.'
       },
       {
         level: 'Level 3',
-        label: 'Smoke in hall',
+        label: 'Smoke in a hall',
         question: 'You smell smoke in a hallway and cannot see fire. What is the safest choice?',
-        options: [
-          'Ignore it if the hallway looks normal',
-          'Leave the area and alert emergency services',
-          'Open a nearby door to investigate',
-          'Use the elevator to leave quickly'
-        ],
+        options: ['Ignore it if the hallway seems normal', 'Leave the area and alert emergency services', 'Open a nearby door to inspect', 'Use the elevator to leave quickly'],
         answer: 1,
-        explanation: 'Smoke is a serious sign of danger. Leave the area promptly and alert the appropriate service.'
+        explanation: 'Smoke is a serious hazard. Leave the area promptly and alert the appropriate service.'
       },
       {
         level: 'Level 3',
         label: 'Communication',
         question: 'You are in a safe place but need to contact a trusted person. What is the best approach?',
-        options: [
-          'Wait until the whole situation passes',
-          'Send a brief message and share location if needed',
-          'Only use social media',
-          'Do not contact anyone because it may cause worry'
-        ],
+        options: ['Wait until the situation is over', 'Send a brief message and share location if needed', 'Only use social media', 'Do not contact anyone because it may cause worry'],
         answer: 1,
         explanation: 'A short emergency message can help a trusted person understand the situation and respond appropriately.'
       }
@@ -1040,12 +1065,8 @@
 
       buttons.forEach((button, index) => {
         button.disabled = true;
-        if (index === question.answer) {
-          button.classList.add('correct');
-        }
-        if (index === selectedIndex && index !== question.answer) {
-          button.classList.add('wrong');
-        }
+        if (index === question.answer) button.classList.add('correct');
+        if (index === selectedIndex && index !== question.answer) button.classList.add('wrong');
       });
 
       if (selectedIndex === question.answer) {
@@ -1062,7 +1083,6 @@
 
       document.getElementById('xpDisplay').textContent = `XP: ${xp}`;
       updateHomeStats();
-
       nextButton.classList.remove('hidden');
       nextButton.textContent = currentQuestionIndex === trainingQuestions.length - 1 ? 'View results' : 'Next question';
     }
@@ -1089,7 +1109,7 @@
       const scorePill = document.getElementById('scorePill');
       const resultText = document.getElementById('resultText');
       scorePill.textContent = `${correctCount} / ${trainingQuestions.length} correct`;
-      resultText.textContent = `You earned ${xp} XP and completed the emergency training set. Continue practising to improve safe decision-making.`;
+      resultText.textContent = `You earned ${xp} XP and completed the emergency training set. Continue practising to improve your emergency response skills.`;
       showScreen('results');
     }
 
@@ -1102,17 +1122,15 @@
 
     function playGeneratedTone(kind) {
       stopSound();
-
       const AudioCtx = window.AudioContext || window.webkitAudioContext;
       if (!AudioCtx) {
-        alert('Audio not supported in this browser.');
+        alert('Audio is not supported in this browser.');
         return;
       }
 
       const ctx = new AudioCtx();
       const oscillator = ctx.createOscillator();
       const gain = ctx.createGain();
-
       oscillator.connect(gain);
       gain.connect(ctx.destination);
 
@@ -1131,12 +1149,20 @@
       }
 
       gain.gain.setValueAtTime(0.0001, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.15, ctx.currentTime + 0.05);
+      gain.gain.exponentialRampToValueAtTime(0.16, ctx.currentTime + 0.05);
       gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 1.5);
 
       oscillator.start();
       oscillator.stop(ctx.currentTime + 1.5);
       activeOscillator = oscillator;
+    }
+
+    function loadProfile() {
+      document.getElementById('nameInput').value = localStorage.getItem('emergencyName') || '';
+      document.getElementById('contactInput').value = localStorage.getItem('emergencyContact') || '';
+      document.getElementById('phoneInput').value = localStorage.getItem('emergencyPhone') || '';
+      document.getElementById('notesInput').value = localStorage.getItem('emergencyNotes') || '';
+      renderProfileSummary();
     }
 
     function saveProfile() {
@@ -1159,7 +1185,6 @@
       localStorage.removeItem('emergencyContact');
       localStorage.removeItem('emergencyPhone');
       localStorage.removeItem('emergencyNotes');
-
       document.getElementById('nameInput').value = '';
       document.getElementById('contactInput').value = '';
       document.getElementById('phoneInput').value = '';
@@ -1188,15 +1213,15 @@
     }
 
     document.querySelectorAll('[data-target]').forEach(button => {
-      button.addEventListener('click', function () {
-        const target = this.getAttribute('data-target');
+      button.addEventListener('click', () => {
+        const target = button.getAttribute('data-target');
         if (target) showScreen(target);
       });
     });
 
     document.querySelectorAll('[data-start]').forEach(button => {
-      button.addEventListener('click', function () {
-        const kind = this.getAttribute('data-start');
+      button.addEventListener('click', () => {
+        const kind = button.getAttribute('data-start');
         if (kind === 'fire') {
           currentQuestionIndex = 0;
           renderQuestion();
@@ -1217,23 +1242,48 @@
     document.getElementById('restartBtn').addEventListener('click', startTraining);
     document.getElementById('stopSoundBtn').addEventListener('click', stopSound);
     document.querySelectorAll('[data-sound]').forEach(button => {
-      button.addEventListener('click', function () {
-        playGeneratedTone(this.getAttribute('data-sound'));
+      button.addEventListener('click', () => {
+        playGeneratedTone(button.getAttribute('data-sound'));
       });
     });
 
     document.getElementById('saveProfileBtn').addEventListener('click', saveProfile);
     document.getElementById('clearProfileBtn').addEventListener('click', clearProfile);
 
-    (function initProfileInputs() {
-      document.getElementById('nameInput').value = localStorage.getItem('emergencyName') || '';
-      document.getElementById('contactInput').value = localStorage.getItem('emergencyContact') || '';
-      document.getElementById('phoneInput').value = localStorage.getItem('emergencyPhone') || '';
-      document.getElementById('notesInput').value = localStorage.getItem('emergencyNotes') || '';
-      renderProfileSummary();
-      updateHomeStats();
-      startTraining();
-    })();
+    document.getElementById('scanCameraBtn').addEventListener('click', () => {
+      const cameraStatus = document.getElementById('cameraStatus');
+      cameraStatus.textContent = 'AI simulation: possible hazard detected in the area. Please check the situation and remain cautious.';
+    });
+
+    document.getElementById('sendAssistantBtn').addEventListener('click', () => {
+      const input = document.getElementById('assistantInput');
+      const value = input.value.trim();
+      if (!value) return;
+
+      const chatBox = document.getElementById('chatBox');
+      const userMsg = document.createElement('div');
+      userMsg.className = 'msg user';
+      userMsg.textContent = value;
+      chatBox.appendChild(userMsg);
+
+      let answer = 'Stay calm, move to a safe place, and call local emergency services if needed.';
+      const text = value.toLowerCase();
+      if (text.includes('fire') || text.includes('smoke')) answer = 'Move away from danger, use the safest exit, and call emergency services if needed.';
+      if (text.includes('medical') || text.includes('hurt') || text.includes('injured')) answer = 'Call local emergency services, give your exact location, and follow their instructions.';
+      if (text.includes('storm') || text.includes('rain') || text.includes('flood')) answer = 'Move to a safe indoor location, avoid floodwater, and follow official weather guidance.';
+      if (text.includes('road') || text.includes('accident')) answer = 'Keep your distance, avoid the danger zone, and call the correct emergency service.';
+
+      const aiMsg = document.createElement('div');
+      aiMsg.className = 'msg ai';
+      aiMsg.textContent = answer;
+      chatBox.appendChild(aiMsg);
+      chatBox.scrollTop = chatBox.scrollHeight;
+      input.value = '';
+    });
+
+    loadProfile();
+    updateHomeStats();
+    startTraining();
   </script>
 </body>
 </html>
