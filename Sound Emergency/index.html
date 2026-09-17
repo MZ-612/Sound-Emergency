@@ -80,6 +80,7 @@
       padding: 11px 16px;
       cursor: pointer;
       transition: 0.2s ease;
+      min-height: 44px;
     }
 
     .btn:hover {
@@ -583,6 +584,25 @@
     }
 
     @media (max-width: 860px) {
+      .nav {
+        height: auto;
+        display: block;
+        padding: 14px 0;
+      }
+
+      .nav-links {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        gap: 8px;
+        margin-top: 12px;
+      }
+
+      .nav-links .btn {
+        flex: 1 1 calc(50% - 8px);
+        min-width: 120px;
+      }
+
       .hero {
         grid-template-columns: 1fr;
         padding-top: 32px;
@@ -593,11 +613,16 @@
       .wide {
         grid-column: auto;
       }
-      .nav-links {
-        display: none;
-      }
       .section-head {
         display: block;
+      }
+      .hero-actions,
+      .row-actions {
+        flex-direction: column;
+      }
+      .hero-actions .btn,
+      .row-actions .btn {
+        width: 100%;
       }
     }
   </style>
@@ -623,7 +648,7 @@
         <div>
           <div class="eyebrow">Emergency readiness platform</div>
           <h1>Learn. React. <span>Stay Safe.</span></h1>
-          <p class="lead">Emergency Mission is an educational safety app designed to help people practise safer decision-making in emergency situations through guided missions, sound recognition, and quick safety tools.</p>
+          <p class="lead">Emergency Mission is an educational safety app designed to help people practise safer decision-making in emergency situations through guided missions, sound recognition, safety mode, and practice scenarios.</p>
           <div class="hero-actions">
             <button type="button" class="btn primary" data-target="missions">Start mission</button>
             <button type="button" class="btn secondary" data-target="assistant">AI assistant</button>
@@ -930,7 +955,7 @@
         level: 'Level 1',
         label: 'Severe weather',
         question: 'A severe weather warning is issued. What is the safest action?',
-        options: ['Go outside to watch the storm', 'Move to a safer indoor shelter and follow official guidance', 'Stand by a window to monitor conditions', 'Ignore the warning if conditions look calm'],
+        options: ['Go outside to watch the storm', 'Move to a safer indoor shelter and follow official guidance', 'Stand by a window to monitor conditions', 'Ignore the warning if conditions look manageable'],
         answer: 1,
         explanation: 'Severe weather requires moving to a safe indoor area and following guidance.'
       },
@@ -946,7 +971,7 @@
         level: 'Level 2',
         label: 'Gas smell',
         question: 'You smell gas in a building. What is the safest action?',
-        options: ['Search indoors for the source with lights on', 'Avoid flames, leave the area, and contact emergency services', 'Close the door and wait quietly', 'Use your phone indoors to locate the source'],
+        options: ['Search indoors for the source with lights on', 'Avoid flames, leave the area, and contact emergency services', 'Close the door and wait quietly', 'Use your phone indoors to locate the smell'],
         answer: 1,
         explanation: 'Gas can be dangerous and highly flammable. Leave the area and alert the proper service.'
       },
@@ -998,292 +1023,288 @@
     let locked = false;
     let activeOscillator = null;
 
-    function showScreen(name) {
-      allScreens.forEach(screen => {
-        document.getElementById(screen).classList.toggle('active', screen === name);
+    const screens = document.querySelectorAll('.screen');
+    const navButtons = document.querySelectorAll('[data-target]');
+    const startButtons = document.querySelectorAll('[data-start]');
+
+    function showScreen(id) {
+      screens.forEach(screen => {
+        screen.classList.toggle('active', screen.id === id);
       });
     }
 
-    function updateHomeStats() {
-      const ready = Math.min(100, Math.round((correctCount / trainingQuestions.length) * 100));
-      const readyEl = document.getElementById('readyPercent');
-      const scoreStatus = document.getElementById('scoreStatus');
-      const xpEl = document.getElementById('xpValue');
-      if (readyEl) readyEl.textContent = `${ready}%`;
-      if (scoreStatus) scoreStatus.textContent = `${correctCount}/${trainingQuestions.length}`;
-      if (xpEl) xpEl.textContent = String(xp);
-    }
-
-    function updateProgress() {
-      const progress = ((currentQuestionIndex + 1) / trainingQuestions.length) * 100;
-      const bar = document.getElementById('progressBar');
-      if (bar) bar.style.width = `${Math.min(progress, 100)}%`;
-    }
-
-    function renderQuestion() {
-      const question = trainingQuestions[currentQuestionIndex];
-      if (!question) {
-        showFinalResults();
-        return;
-      }
-
-      document.getElementById('levelPill').textContent = question.level;
-      document.getElementById('xpDisplay').textContent = `XP: ${xp}`;
-      document.getElementById('questionLabel').textContent = question.label;
-      document.getElementById('questionText').textContent = question.question;
-
-      const answers = document.getElementById('answers');
-      const feedback = document.getElementById('feedbackBox');
-      const nextButton = document.getElementById('nextQuestionBtn');
-
-      answers.innerHTML = '';
-      feedback.textContent = 'Choose the safest response.';
-      feedback.classList.remove('success', 'error');
-      nextButton.classList.add('hidden');
-      locked = false;
-
-      question.options.forEach((option, index) => {
-        const button = document.createElement('button');
-        button.type = 'button';
-        button.className = 'answer-btn';
-        button.textContent = option;
-        button.addEventListener('click', () => chooseAnswer(index));
-        answers.appendChild(button);
-      });
-
-      updateProgress();
-    }
-
-    function chooseAnswer(selectedIndex) {
-      if (locked) return;
-      locked = true;
-
-      const question = trainingQuestions[currentQuestionIndex];
-      const buttons = Array.from(document.querySelectorAll('.answer-btn'));
-      const feedback = document.getElementById('feedbackBox');
-      const nextButton = document.getElementById('nextQuestionBtn');
-
-      buttons.forEach((button, index) => {
-        button.disabled = true;
-        if (index === question.answer) button.classList.add('correct');
-        if (index === selectedIndex && index !== question.answer) button.classList.add('wrong');
-      });
-
-      if (selectedIndex === question.answer) {
-        xp += 100;
-        correctCount += 1;
-        feedback.textContent = `Correct. ${question.explanation}`;
-        feedback.classList.remove('error');
-        feedback.classList.add('success');
-      } else {
-        feedback.textContent = `Not the safest choice. ${question.explanation}`;
-        feedback.classList.remove('success');
-        feedback.classList.add('error');
-      }
-
-      document.getElementById('xpDisplay').textContent = `XP: ${xp}`;
-      updateHomeStats();
-      nextButton.classList.remove('hidden');
-      nextButton.textContent = currentQuestionIndex === trainingQuestions.length - 1 ? 'View results' : 'Next question';
-    }
-
-    function nextQuestion() {
-      if (currentQuestionIndex < trainingQuestions.length - 1) {
-        currentQuestionIndex += 1;
-        renderQuestion();
-      } else {
-        showFinalResults();
-      }
-    }
-
-    function startTraining() {
-      currentQuestionIndex = 0;
-      xp = 0;
-      correctCount = 0;
-      updateHomeStats();
-      renderQuestion();
-      showScreen('training');
-    }
-
-    function showFinalResults() {
-      const scorePill = document.getElementById('scorePill');
-      const resultText = document.getElementById('resultText');
-      scorePill.textContent = `${correctCount} / ${trainingQuestions.length} correct`;
-      resultText.textContent = `You earned ${xp} XP and completed the emergency training set. Continue practising to improve your emergency response skills.`;
-      showScreen('results');
-    }
-
-    function stopSound() {
-      if (activeOscillator) {
-        try { activeOscillator.stop(); } catch (e) {}
-        activeOscillator = null;
-      }
-    }
-
-    function playGeneratedTone(kind) {
-      stopSound();
-      const AudioCtx = window.AudioContext || window.webkitAudioContext;
-      if (!AudioCtx) {
-        alert('Audio is not supported in this browser.');
-        return;
-      }
-
-      const ctx = new AudioCtx();
-      const oscillator = ctx.createOscillator();
-      const gain = ctx.createGain();
-      oscillator.connect(gain);
-      gain.connect(ctx.destination);
-
-      if (kind === 'siren') {
-        oscillator.type = 'sawtooth';
-        oscillator.frequency.value = 650;
-      } else if (kind === 'alarm') {
-        oscillator.type = 'square';
-        oscillator.frequency.value = 880;
-      } else if (kind === 'medical') {
-        oscillator.type = 'triangle';
-        oscillator.frequency.value = 700;
-      } else {
-        oscillator.type = 'sine';
-        oscillator.frequency.value = 440;
-      }
-
-      gain.gain.setValueAtTime(0.0001, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.16, ctx.currentTime + 0.05);
-      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 1.5);
-
-      oscillator.start();
-      oscillator.stop(ctx.currentTime + 1.5);
-      activeOscillator = oscillator;
-    }
-
-    function loadProfile() {
-      document.getElementById('nameInput').value = localStorage.getItem('emergencyName') || '';
-      document.getElementById('contactInput').value = localStorage.getItem('emergencyContact') || '';
-      document.getElementById('phoneInput').value = localStorage.getItem('emergencyPhone') || '';
-      document.getElementById('notesInput').value = localStorage.getItem('emergencyNotes') || '';
-      renderProfileSummary();
-    }
-
-    function saveProfile() {
-      const name = document.getElementById('nameInput').value.trim();
-      const contact = document.getElementById('contactInput').value.trim();
-      const phone = document.getElementById('phoneInput').value.trim();
-      const notes = document.getElementById('notesInput').value.trim();
-
-      localStorage.setItem('emergencyName', name);
-      localStorage.setItem('emergencyContact', contact);
-      localStorage.setItem('emergencyPhone', phone);
-      localStorage.setItem('emergencyNotes', notes);
-
-      renderProfileSummary();
-      alert('Profile saved locally on this device.');
-    }
-
-    function clearProfile() {
-      localStorage.removeItem('emergencyName');
-      localStorage.removeItem('emergencyContact');
-      localStorage.removeItem('emergencyPhone');
-      localStorage.removeItem('emergencyNotes');
-      document.getElementById('nameInput').value = '';
-      document.getElementById('contactInput').value = '';
-      document.getElementById('phoneInput').value = '';
-      document.getElementById('notesInput').value = '';
-      renderProfileSummary();
-      alert('Profile cleared.');
-    }
-
-    function renderProfileSummary() {
-      const name = localStorage.getItem('emergencyName') || '';
-      const contact = localStorage.getItem('emergencyContact') || '';
-      const phone = localStorage.getItem('emergencyPhone') || '';
-      const notes = localStorage.getItem('emergencyNotes') || '';
-
-      document.getElementById('savedName').textContent = name || 'Not provided';
-      document.getElementById('savedContact').textContent = contact || 'Not provided';
-      document.getElementById('savedPhone').textContent = phone || 'Not provided';
-      document.getElementById('savedNotes').textContent = notes || 'Not provided';
-
-      const summary = document.getElementById('profileSummary');
-      if (name || contact || phone || notes) {
-        summary.classList.add('visible');
-      } else {
-        summary.classList.remove('visible');
-      }
-    }
-
-    document.querySelectorAll('[data-target]').forEach(button => {
+    navButtons.forEach(button => {
       button.addEventListener('click', () => {
-        const target = button.getAttribute('data-target');
+        const target = button.dataset.target;
         if (target) showScreen(target);
       });
     });
 
-    document.querySelectorAll('[data-start]').forEach(button => {
+    function getActiveQuestion() {
+      return trainingQuestions[currentQuestionIndex];
+    }
+
+    function updateProgress() {
+      const total = trainingQuestions.length;
+      const nextIndex = Math.min(currentQuestionIndex + 1, total);
+      const percent = (nextIndex / total) * 100;
+      const progressBar = document.getElementById('progressBar');
+      if (progressBar) {
+        progressBar.style.width = `${percent}%`;
+      }
+    }
+
+    function renderQuestion() {
+      const question = getActiveQuestion();
+      if (!question) return;
+
+      const levelPill = document.getElementById('levelPill');
+      const questionText = document.getElementById('questionText');
+      const questionLabel = document.getElementById('questionLabel');
+      const answers = document.getElementById('answers');
+      const feedbackBox = document.getElementById('feedbackBox');
+      const nextBtn = document.getElementById('nextQuestionBtn');
+
+      if (levelPill) levelPill.textContent = question.level;
+      if (questionText) questionText.textContent = question.question;
+      if (questionLabel) questionLabel.textContent = question.label;
+      if (answers) {
+        answers.innerHTML = '';
+        question.options.forEach((option, index) => {
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.className = 'answer-btn';
+          button.textContent = option;
+          button.addEventListener('click', () => selectAnswer(index));
+          answers.appendChild(button);
+        });
+      }
+      if (feedbackBox) {
+        feedbackBox.textContent = 'Choose the safest response.';
+        feedbackBox.className = 'feedback';
+      }
+      if (nextBtn) {
+        nextBtn.classList.add('hidden');
+      }
+      locked = false;
+      updateProgress();
+    }
+
+    function selectAnswer(selectedIndex) {
+      if (locked) return;
+      const question = getActiveQuestion();
+      const feedbackBox = document.getElementById('feedbackBox');
+      const answerButtons = document.querySelectorAll('.answer-btn');
+      const nextBtn = document.getElementById('nextQuestionBtn');
+      const xpDisplay = document.getElementById('xpDisplay');
+
+      locked = true;
+
+      answerButtons.forEach((button, index) => {
+        button.disabled = true;
+        if (index === question.answer) {
+          button.classList.add('correct');
+        }
+        if (index === selectedIndex && index !== question.answer) {
+          button.classList.add('wrong');
+        }
+      });
+
+      const isCorrect = selectedIndex === question.answer;
+      if (isCorrect) {
+        correctCount += 1;
+        xp += 10;
+        if (feedbackBox) {
+          feedbackBox.textContent = `Correct. ${question.explanation}`;
+          feedbackBox.classList.add('success');
+        }
+      } else {
+        xp += 5;
+        if (feedbackBox) {
+          feedbackBox.textContent = `Not quite. ${question.explanation}`;
+          feedbackBox.classList.add('error');
+        }
+      }
+
+      if (xpDisplay) xpDisplay.textContent = `XP: ${xp}`;
+      if (nextBtn) {
+        nextBtn.classList.remove('hidden');
+      }
+    }
+
+    function goToNextQuestion() {
+      currentQuestionIndex += 1;
+      const total = trainingQuestions.length;
+      if (currentQuestionIndex >= total) {
+        finishTraining();
+        return;
+      }
+      renderQuestion();
+    }
+
+    function finishTraining() {
+      const resultText = document.getElementById('resultText');
+      const scorePill = document.getElementById('scorePill');
+      const readyPercent = document.getElementById('readyPercent');
+      const scoreStatus = document.getElementById('scoreStatus');
+      const xpValue = document.getElementById('xpValue');
+
+      if (scorePill) {
+        scorePill.textContent = `${correctCount} / ${trainingQuestions.length} correct`;
+      }
+      if (resultText) {
+        resultText.textContent = `You finished the emergency mission set with ${correctCount} correct answers and ${xp} XP earned.`;
+      }
+      if (readyPercent) {
+        readyPercent.textContent = `${Math.round((correctCount / trainingQuestions.length) * 100)}%`;
+      }
+      if (scoreStatus) {
+        scoreStatus.textContent = `${correctCount}/${trainingQuestions.length}`;
+      }
+      if (xpValue) {
+        xpValue.textContent = xp;
+      }
+
+      showScreen('results');
+    }
+
+    document.getElementById('nextQuestionBtn')?.addEventListener('click', goToNextQuestion);
+    document.getElementById('restartBtn')?.addEventListener('click', () => {
+      currentQuestionIndex = 0;
+      xp = 0;
+      correctCount = 0;
+      renderQuestion();
+      showScreen('missions');
+    });
+
+    startButtons.forEach(button => {
       button.addEventListener('click', () => {
-        const kind = button.getAttribute('data-start');
-        if (kind === 'fire') {
-          currentQuestionIndex = 0;
-          renderQuestion();
-          showScreen('training');
-        } else if (kind === 'road') {
-          currentQuestionIndex = 1;
-          renderQuestion();
-          showScreen('training');
-        } else if (kind === 'weather') {
-          currentQuestionIndex = 2;
+        const level = button.dataset.start;
+        if (!level) return;
+        const foundIndex = trainingQuestions.findIndex(question => question.label.toLowerCase().includes(level));
+        if (foundIndex >= 0) {
+          currentQuestionIndex = foundIndex;
           renderQuestion();
           showScreen('training');
         }
       });
     });
 
-    document.getElementById('nextQuestionBtn').addEventListener('click', nextQuestion);
-    document.getElementById('restartBtn').addEventListener('click', startTraining);
-    document.getElementById('stopSoundBtn').addEventListener('click', stopSound);
-    document.querySelectorAll('[data-sound]').forEach(button => {
-      button.addEventListener('click', () => {
-        playGeneratedTone(button.getAttribute('data-sound'));
-      });
-    });
-
-    document.getElementById('saveProfileBtn').addEventListener('click', saveProfile);
-    document.getElementById('clearProfileBtn').addEventListener('click', clearProfile);
-
-    document.getElementById('scanCameraBtn').addEventListener('click', () => {
-      const cameraStatus = document.getElementById('cameraStatus');
-      cameraStatus.textContent = 'AI simulation: possible hazard detected in the area. Please check the situation and remain cautious.';
-    });
-
-    document.getElementById('sendAssistantBtn').addEventListener('click', () => {
+    document.getElementById('sendAssistantBtn')?.addEventListener('click', () => {
       const input = document.getElementById('assistantInput');
-      const value = input.value.trim();
-      if (!value) return;
-
       const chatBox = document.getElementById('chatBox');
-      const userMsg = document.createElement('div');
-      userMsg.className = 'msg user';
-      userMsg.textContent = value;
-      chatBox.appendChild(userMsg);
-
-      let answer = 'Stay calm, move to a safe place, and call local emergency services if needed.';
-      const text = value.toLowerCase();
-      if (text.includes('fire') || text.includes('smoke')) answer = 'Move away from danger, use the safest exit, and call emergency services if needed.';
-      if (text.includes('medical') || text.includes('hurt') || text.includes('injured')) answer = 'Call local emergency services, give your exact location, and follow their instructions.';
-      if (text.includes('storm') || text.includes('rain') || text.includes('flood')) answer = 'Move to a safe indoor location, avoid floodwater, and follow official weather guidance.';
-      if (text.includes('road') || text.includes('accident')) answer = 'Keep your distance, avoid the danger zone, and call the correct emergency service.';
-
-      const aiMsg = document.createElement('div');
-      aiMsg.className = 'msg ai';
-      aiMsg.textContent = answer;
-      chatBox.appendChild(aiMsg);
-      chatBox.scrollTop = chatBox.scrollHeight;
+      if (!input || !chatBox) return;
+      const text = input.value.trim();
+      if (!text) return;
+      const userMessage = document.createElement('div');
+      userMessage.className = 'msg user';
+      userMessage.textContent = text;
+      chatBox.appendChild(userMessage);
       input.value = '';
+
+      const aiMessage = document.createElement('div');
+      aiMessage.className = 'msg ai';
+      aiMessage.textContent = 'General safety advice: stay calm, move to a safe area, and call the appropriate emergency service if needed.';
+      chatBox.appendChild(aiMessage);
+      chatBox.scrollTop = chatBox.scrollHeight;
     });
 
-    loadProfile();
-    updateHomeStats();
-    startTraining();
+    document.getElementById('scanCameraBtn')?.addEventListener('click', () => {
+      const cameraStatus = document.getElementById('cameraStatus');
+      if (!cameraStatus) return;
+      cameraStatus.textContent = 'Scan complete. Hazard area is clear in this demo.';
+    });
+
+    document.getElementById('saveProfileBtn')?.addEventListener('click', () => {
+      const profile = {
+        name: document.getElementById('nameInput')?.value || '',
+        contact: document.getElementById('contactInput')?.value || '',
+        phone: document.getElementById('phoneInput')?.value || '',
+        notes: document.getElementById('notesInput')?.value || ''
+      };
+      localStorage.setItem('emergencyProfile', JSON.stringify(profile));
+      renderProfileSummary();
+    });
+
+    document.getElementById('clearProfileBtn')?.addEventListener('click', () => {
+      localStorage.removeItem('emergencyProfile');
+      document.getElementById('nameInput').value = '';
+      document.getElementById('contactInput').value = '';
+      document.getElementById('phoneInput').value = '';
+      document.getElementById('notesInput').value = '';
+      renderProfileSummary();
+    });
+
+    function renderProfileSummary() {
+      const summary = document.getElementById('profileSummary');
+      const saved = JSON.parse(localStorage.getItem('emergencyProfile') || '{}');
+      const name = saved.name || 'Not provided';
+      const contact = saved.contact || 'Not provided';
+      const phone = saved.phone || 'Not provided';
+      const notes = saved.notes || 'Not provided';
+
+      document.getElementById('savedName').textContent = name;
+      document.getElementById('savedContact').textContent = contact;
+      document.getElementById('savedPhone').textContent = phone;
+      document.getElementById('savedNotes').textContent = notes;
+
+      if (summary) {
+        summary.classList.toggle('visible', !!saved.name || !!saved.contact || !!saved.phone || !!saved.notes);
+      }
+    }
+
+    const soundButtons = document.querySelectorAll('[data-sound]');
+    const stopButton = document.getElementById('stopSoundBtn');
+
+    function playSound(type) {
+      if (activeOscillator) {
+        activeOscillator.stop();
+      }
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtx) return;
+      const audioContext = new AudioCtx();
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+
+      oscillator.type = 'sawtooth';
+      oscillator.frequency.value = {
+        siren: 660,
+        alarm: 920,
+        medical: 540,
+        evacuation: 780
+      }[type] || 700;
+
+      gainNode.gain.value = 0.03;
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+      oscillator.start();
+      activeOscillator = oscillator;
+
+      setTimeout(() => {
+        oscillator.stop();
+        audioContext.close();
+        activeOscillator = null;
+      }, 900);
+    }
+
+    soundButtons.forEach(button => {
+      button.addEventListener('click', () => playSound(button.dataset.sound));
+    });
+
+    stopButton?.addEventListener('click', () => {
+      if (activeOscillator) {
+        activeOscillator.stop();
+        activeOscillator = null;
+      }
+    });
+
+    const storedProfile = JSON.parse(localStorage.getItem('emergencyProfile') || '{}');
+    if (storedProfile.name) document.getElementById('nameInput').value = storedProfile.name;
+    if (storedProfile.contact) document.getElementById('contactInput').value = storedProfile.contact;
+    if (storedProfile.phone) document.getElementById('phoneInput').value = storedProfile.phone;
+    if (storedProfile.notes) document.getElementById('notesInput').value = storedProfile.notes;
+    renderProfileSummary();
+    renderQuestion();
   </script>
 </body>
 </html>
